@@ -1,0 +1,107 @@
+.popup-container {
+  font-family: "Raleway";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  margin: 50px 0 50px 0; 
+}
+
+.columns {
+  display: flex;
+  flex-direction: row;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 100px 0;
+  margin: 20px;
+  width: 300px;
+  height: 300px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  overflow: hidden;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  font-size: medium;
+  padding: 20px;
+  max-width: 600px;
+  background-color: #ecebeb;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.popup h2 {
+  margin-top: 0;
+}
+
+.popup p {
+  margin-bottom: 20px;
+}
+
+.popup-container button {
+  padding: 10px 20px;
+  background-color: #00706c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.popup button:hover {
+  background-color: #0052a3;
+}
+
+@media (max-width: 768px) {
+  .popup-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .columns {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .popup-container button {
+    width: 100%;
+  }
+
+  .popup-container-button {
+    width: 100%;
+  }
+}

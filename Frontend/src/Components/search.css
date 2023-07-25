@@ -1,0 +1,54 @@
+.doctor-search-container {
+    background-color: #07a19c;
+    padding: 30px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+.topic1{
+    text-align: center;
+}
+
+  .doctor-search-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .doctor-search-input {
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .doctor-specialty-select {
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 20px;
+    width: 100%;
+    max-width: 200px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .find-doctor-button {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .find-doctor-button:hover {
+    background-color: #0056b3;
+  }
+  

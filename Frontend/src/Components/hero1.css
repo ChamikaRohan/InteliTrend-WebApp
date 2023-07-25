@@ -1,0 +1,109 @@
+.hero {
+  width: 100%;
+  background-color: #00706c;
+  color: white;
+  height: 600px;
+}
+
+.hero2 {
+  font-family: "Raleway";
+  text-align: left;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 47px;
+  line-height: 55px;
+  padding-top: 4%;
+  padding-left: 6%;
+  margin-bottom: 3%;
+}
+
+.aboutpage {
+  font-family: "Raleway";
+  font-style: normal;
+  font-size: 18px;
+  line-height: 23px;
+  padding-left: 6%;
+  text-align: justify;
+  display: flex;
+}
+
+.JoinUs_button {
+  background-color: #ff9f00; 
+  border: none; 
+  border-radius: 20px; 
+  color: #fff; 
+  padding: 10px 20px;
+  text-align: center; 
+  text-decoration: none; 
+  display: inline-block; 
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: all 0.6s ease;
+}
+
+.JoinUs_button:hover {
+  transform: scale(1.1);
+}
+
+.moreinfo_button {
+  border-radius: 20px;
+  color: black;
+  padding: 10px 20px;
+  width: 140px;
+  text-align: center;
+  text-decoration: none;
+  margin-left: 10%;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 8%;
+  transition: all 0.6s ease;
+}
+
+.moreinfo_button:hover {
+  transform: scale(1.1);
+}
+
+.buttonsDiv {
+  padding-top: 5%;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+
+.hero1_image1 {
+  display: block;
+  padding-left: 16%;
+  align-items: center;
+  transition: all 0.6s ease;
+}
+
+.hero1_image1:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    width: 100%;
+    background-color: #00706c;
+    color: white;
+    height: 550px;
+  }
+
+  .hero1_image1 {
+    display: none;
+  }
+
+  .hero2 {
+    margin: 5%;
+    font-size: 35px;
+    line-height: 50px;
+    text-align: center;
+  }
+
+  .aboutpage p{
+    margin: 1% 1%;
+    font-size: 17px;
+    text-align: center;
+  }
+}
