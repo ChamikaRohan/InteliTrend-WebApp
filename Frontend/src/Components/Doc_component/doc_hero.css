@@ -1,0 +1,84 @@
+.hero-container {
+  background-image: url('/src/Images/back_1.jpg');
+  display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+background-size: cover;
+}
+
+.topic_doc{
+  color: #000;
+}
+
+.hero-content {
+  width: 50%;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.channel-button {
+  background-color: #fff;
+  color: #000;
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.doctor-search-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.topic_doc {
+  color: red;
+  text-shadow: 2px 2px 4px #000000;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+
+.but
+{
+    position: relative;
+    appearance: none;
+    background-color: #FF9F00;
+    border: none;
+    color: white;
+    padding: 10px 20px 10px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.but:hover {
+  background-color: red;
+}
+
+MuiButton-containedSuccess {
+  background-color: black;
+  color: white;
+}
+
+.custom-btn {
+  background-color: yellow;
+}

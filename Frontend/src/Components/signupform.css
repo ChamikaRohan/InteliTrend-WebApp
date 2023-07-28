@@ -1,0 +1,113 @@
+.signup-container{
+    width: 80%;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #FAFAF9;
+    margin: 5% auto;
+    display: flex;
+    filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.25));
+    font-family: 'Raleway';
+}
+
+.image-container{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.signup-container-image{
+    width: 100%;
+}
+
+.form-container{
+    width: 48%;
+    background: #FAFAF9;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-link{
+    display: flex;
+    margin-left: 30%;
+}
+
+.login-button-2{
+    background: #F2AF3E;
+    width: 128px;
+    height: 38px;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 300px;
+    margin-top: 2%;
+    margin-left: 4%;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-heading{
+    display: flex;
+    line-height: 1;
+    flex-direction: column;
+    line-height: 1;
+    margin: 5% 5%;
+    text-align: left;
+}
+
+.signup-heading span{
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.signup-item{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin: 1% 5%;
+}
+
+.signup-item label{
+    font-size: large;
+    font-weight: bold;
+    color: #464444;
+    margin: 1% 0;
+}
+
+.signup-item input{
+    width: 100%;
+    height: 40px;
+    background: #FFFFFF;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.item{
+    display: flex;
+    align-items: center;
+}
+
+.signup-item.item-item{
+    width: 120%;
+}
+
+.sign-up-button{
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    width: 80%;
+    margin: 90px 10% 0% 10%;
+    height: 40px;
+    background: #F2AF3E;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    font-weight: bold;
+    color: #464444;
+}
+
+.sign-up-button:hover, .login-button-2:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out; 
+}

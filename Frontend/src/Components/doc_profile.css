@@ -1,0 +1,41 @@
+.doctor-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .doctor-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .doctor-details {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .book-appointment-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .doc_main_profile_para{
+    padding-left: 30%;
+    padding-right: 30%;
+  }
+
+  /* CSS for the "real-doc" class */
+.real-doc {
+  width: 500px; /* Set the desired width */
+  height: 500px; /* Set the desired height */
+  border-radius: 50%; /* Make it circular by setting the border-radius to half of the width/height */
+}

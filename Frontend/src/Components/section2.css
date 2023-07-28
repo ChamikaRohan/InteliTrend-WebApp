@@ -1,0 +1,85 @@
+.sec2main{
+    background-color: #00706C;
+	color: white;
+	height: 500px;
+}
+
+.colored-box {
+    box-sizing: border-box;
+
+position: relative;
+width: 33%;
+height: 50%;
+left: 33%;
+top: 10%;
+bottom: 25%;
+
+
+background: white;
+border: 5px solid #000000;
+box-shadow: 11px 17px 4px rgba(0, 0, 0, 0.27);
+border-radius: 18px;
+  }
+
+  .insidebox{
+    display: flex;
+  }
+
+  .content-box {
+    width: 500px;
+    height: 200px;
+    margin: auto;
+    border: 1px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: white;
+border: 5px solid #000000;
+box-shadow: 11px 17px 4px rgba(0, 0, 0, 0.27);
+border-radius: 18px;
+
+margin-top: 60px;
+  }
+  
+  .content-box a {
+    margin: 10px;
+    padding: 5px 10px;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 20px;
+  }
+  
+  .content-box a:hover {
+    color: red;
+  }
+  
+.JoinUs_button_sec2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #FF9F00; /* set background color */
+    border: none; /* remove default border */
+    border-radius: 20px; /* set border radius to create rounded corners */
+    color: #fff; /* set text color */
+    padding: 10px 20px; /* add padding to create button size */
+    text-decoration: none; /* remove default underline */
+    font-size: 16px;
+    margin-left: 45%;
+    margin-right: 45%;
+    margin-top: 3%;
+    transition: all 0.6s ease;
+}
+
+.JoinUs_button_sec2:hover{
+    transform: scale(1.2);
+}
+
+.footh3{
+    color: white;
+    text-decoration: solid;
+}
