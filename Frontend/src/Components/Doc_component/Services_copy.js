@@ -22,13 +22,28 @@ import { URL } from "../../env";
 import Modal from "@mui/material/Modal";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
+// import Dialog from "@mui/material/Dialog";
+// import DialogTitle from "@mui/material/DialogTitle";
+// import DialogContent from "@mui/material/DialogContent";
+// import DialogContentText from "@mui/material/DialogContentText";
+// import DialogActions from "@mui/material/DialogActions";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TextField,
+} from '@mui/material';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -81,6 +96,134 @@ function Copyright() {
   );
 }
 
+const DoctorCard = ({ item }) => {
+  const [open, setOpen] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  const handleBookAppointment = () => {
+    if (selectedDate) {
+      // Send appointment details to backend
+      const appointmentData = {
+        doctorId: item._id,
+        date: selectedDate,
+      };
+      console.log("done: ", appointmentData);
+      setSelectedDate(null);
+      // Make an API call to send appointmentData to your backend
+    } else {
+      setErrorMessage('Please select a date !!!');
+    }
+
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setErrorMessage('');
+  };
+
+  return (
+    <Grid item key={item._id} xs={12} sm={6} md={4}>
+      <Card
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          transition: "box-shadow 0.3s ease-in-out",
+          "&:hover": {
+            boxShadow: "0px 10px 50px rgba(141, 158, 71, 0.5)",
+          },
+        }}
+      >
+        <CardMedia
+          component="img"
+          image={LoginImage}
+          alt="random"
+          sx={{ flexGrow: 1 }}
+        />
+
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Typography gutterBottom variant="h5" component="h2">
+            {item.docname}
+          </Typography>
+          <Typography>
+            Speciality: {item.speciality}
+            <br />
+            Hospital: {item.workingHospital}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button variant="outlined" onClick={handleOpen}>
+            View
+          </Button>
+        </CardActions>
+
+        {/* Dialog */}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby={`customized-dialog-title-${item._id}`}
+        >
+          <DialogTitle
+            id={`customized-dialog-title-${item._id}`}
+            onClose={handleClose}
+          >
+            {item.docname}
+          </DialogTitle>
+          <DialogContent dividers>
+            {/* Add the content you want to display inside the modal */}
+            <DialogContentText>
+              Speciality: {item.speciality}
+              <br />
+              Hospital: {item.workingHospital}
+              <br />
+              <br />
+              Description: {item.description}
+            </DialogContentText>
+            {/* Add any other content or actions you want in the modal */}
+          </DialogContent>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              label="Choose Date and Time"
+              value={selectedDate}
+              onChange={setSelectedDate}
+              viewRenderers={{
+                hours: renderTimeViewClock
+              }}
+              renderInput={(props) => <TextField {...props} />}
+            />
+          </LocalizationProvider>
+          <DialogActions>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            <Button autoFocus onClick={handleBookAppointment}>
+              book an appointment
+            </Button>
+            <Button autoFocus onClick={handleClose}>
+              Close
+            </Button>
+            {/* Add any other actions you want in the modal */}
+          </DialogActions>
+        </Dialog>
+      </Card>
+    </Grid>
+  );
+};
+
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
@@ -121,6 +264,10 @@ export default function Album(userData) {
 
     fetchDoctors();
   }, [specialty]);
+
+  const filteredData = data.filter(
+    (item) => specialty === "" || item.speciality === specialty
+  );
 
   // useEffect(() => {
   //   fetch("http://localhost:8000/doclist", {
@@ -166,85 +313,9 @@ export default function Album(userData) {
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {data.map(
-              (item) =>
-                (specialty === "" || item.speciality === specialty) && (
-                  <Grid item key={item._id} xs={12} sm={6} md={4}>
-                    <Card
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        transition: "box-shadow 0.3s ease-in-out",
-                        "&:hover": {
-                          boxShadow: "0px 10px 50px rgba(141, 158, 71, 0.5)",
-                        },
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        image={LoginImage}
-                        alt="random"
-                        sx={{ flexGrow: 1 }}
-                      />
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          {item.docname}
-                        </Typography>
-                        <Typography>
-                          Speciality: {item.speciality}
-                          <br />
-                          Hospital: {item.workingHospital}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button variant="outlined" onClick={handleOpen}>
-                          View
-                        </Button>
-                      </CardActions>
-                      <BootstrapDialog
-                        onClose={handleClose}
-                        aria-labelledby="customized-dialog-title"
-                        open={open}
-                      >
-                        <BootstrapDialogTitle
-                          id="customized-dialog-title"
-                          onClose={handleClose}
-                        >
-                          {item.docname}
-                        </BootstrapDialogTitle>
-                        <DialogContent dividers>
-                          <Typography gutterBottom>
-                            Cras mattis consectetur purus sit amet fermentum.
-                            Cras justo odio, dapibus ac facilisis in, egestas
-                            eget quam. Morbi leo risus, porta ac consectetur ac,
-                            vestibulum at eros.
-                          </Typography>
-                          <Typography gutterBottom>
-                            Praesent commodo cursus magna, vel scelerisque nisl
-                            consectetur et. Vivamus sagittis lacus vel augue
-                            laoreet rutrum faucibus dolor auctor.
-                          </Typography>
-                          <Typography gutterBottom>
-                            Aenean lacinia bibendum nulla sed consectetur.
-                            Praesent commodo cursus magna, vel scelerisque nisl
-                            consectetur et. Donec sed odio dui. Donec
-                            ullamcorper nulla non metus auctor fringilla.
-                          </Typography>
-                        </DialogContent>
-                        <DialogActions>
-                        <Button autoFocus onClick={handleClose}>
-                            Place a Book
-                          </Button>
-                          <Button autoFocus onClick={handleClose}>
-                            Save changes
-                          </Button>
-                        </DialogActions>
-                      </BootstrapDialog>
-                    </Card>
-                  </Grid>
-                )
-            )}
+            {filteredData.map((item) => (
+              <DoctorCard key={item._id} item={item} />
+            ))}
           </Grid>
         </Container>
       </main>
