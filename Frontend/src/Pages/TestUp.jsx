@@ -1,42 +1,41 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { URL } from "../env";
 
-function FileUploadCom() {
-  const [file, setFile] = useState(null);
+function TestUp() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [message, setMessage] = useState('');
 
-  const handleFileInputChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
-  const handleFileUpload = () => {
-    const formData = new FormData();
-    formData.append('doc', file);
+  const handleFileUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('pdf', selectedFile);
 
-    const token = localStorage.getItem('token');
-
-    axios
-      .post('http://localhost:8000/upload-doce', formData, {
+      const response = await axios.post(URL+'/uploadtolocal', formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          type: 'brain'
+          'Content-Type': 'multipart/form-data',
         },
-      })
-      .then((response) => {
-        console.log(response.data.msg);
-        // Handle success response
-      })
-      .catch((error) => {
-        console.error(error);
-        // Handle error response
       });
+
+      setMessage(response.data.message);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setMessage('Error uploading file.');
+    }
   };
 
   return (
     <div>
-      <input type="file" onChange={handleFileInputChange} />
-      <button onClick={handleFileUpload}>Upload</button>
+      <h1>PDF Upload</h1>
+      <input type="file" accept=".pdf" onChange={handleFileChange} />
+      <button onClick={handleFileUpload}>Upload PDF</button>
+      <p>{message}</p>
     </div>
   );
 }
 
-export default FileUploadCom;
+export default TestUp;

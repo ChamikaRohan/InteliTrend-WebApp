@@ -23,6 +23,7 @@ import DiabeticPage from './Pages/FilesPages/DiabeticPage';
 import OtherPage from './Pages/FilesPages/OtherPage';
 import TestUp from './Pages/TestUp';
 import Show from './Pages/Show';
+import OCRTest from './Pages/OCRTest'
 import './App.css';
 
 
@@ -54,6 +55,7 @@ function App() {
       <Route path="/OtherFiles" element={<OtherPage/>}/>
       <Route path="/Up" element={<TestUp/>}/>
       <Route path="/Show" element={<Show/>}/>
+      <Route path="/OCR" element={<OCRTest/>}/>
     </Routes>
     </Router>
   );
