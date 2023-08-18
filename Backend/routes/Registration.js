@@ -8,26 +8,32 @@ const path = require('path');
 const { ObjectId } = require('mongodb');
 const { Console } = require('console');
 const fs = require('fs');
+const { pdfToImages } = require('../OCR_Process/pdfProcessing'); // Assuming pdfProcessing.js contains the pdfToImages function
 
 // Define storage location and filename for uploaded files
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const type = req.headers.type; // Extract the Type header value
-    const decoded = jwt.verify(token, 'your secret here');
-    const userId = decoded.userId;
-    const nsubfolder = `uploads/${userId}`;
-    const subfolder = `${nsubfolder}/${type}`;
-    fs.mkdirSync(subfolder, { recursive: true });
-    cb(null, subfolder);
+    cb(null, 'uploads');
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`);
+    cb(null, file.originalname); // Use the original filename as the new filename
   },
 });
 
+
 // Initialize multer with the defined storage settings
 const upload = multer({ storage: storage });
+
+// Set up a route for uploading PDF files to the '/upload' folder
+router.post('/grp7/api/uploadtolocal', upload.single('pdf'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+
+  const uploadedFilePath = req.file.path;
+  return res.status(200).json({ message: 'File uploaded successfully.', filePath: uploadedFilePath });
+});
+
 
 // Define the POST route for file upload
 router.post('/grp7/api/upload', upload.single('file'), async (req, res) => {
@@ -35,8 +41,6 @@ router.post('/grp7/api/upload', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
-
-  // Do something with the uploaded file, such as saving it to a database or displaying it on a webpage
 
   try {
     console.log('try');
@@ -46,7 +50,7 @@ router.post('/grp7/api/upload', upload.single('file'), async (req, res) => {
     const decoded = jwt.verify(token, 'your secret here');
     const userId = decoded.userId;
     // Save the file to the local disk
-    const filePath = `uploads/${userId}/${type}/${req.file.filename}`;
+    const filePath = `uploads`;
     await fs.promises.rename(req.file.path, filePath);
 
     // Send a success response back to the client
@@ -373,6 +377,63 @@ router.get('/grp7/api/get-doc', async (req, res) => {
   }
 });
 
+//OCR
+router.post('/grp7/api/performOCR', async (req, res) => {
+  try {
+    const { pdfPath } = req.body; // Assuming you send the path of the PDF file as a request body
+    const pdfBuffer = fs.readFileSync(pdfPath);
+    
+    // Convert PDF to images and perform OCR
+    const ocrTextbyme = await pdfToImages(pdfBuffer);
 
+    // Optionally, you can perform any additional processing on the images or OCR results here.
+
+    res.json({ success: true, ocrTextbyme });
+  } catch (error) {
+    console.log('Error called');
+    console.error('Error:', error);
+    res.status(500).json({ success: false, error: 'Error processing the PDF document.' });
+  }
+
+  router.post("/grp7/api/OCRtoDB", async (req, res) => {
+
+    const bloodGrp = req.body.bloodGrp;
+    const pulse = req.body.pulse;
+    const height = req.body.height;
+    const weight = req.body.weight;
+    const blood_pressure = req.body.blood_pressure;
+    const breathing = req.body.breathing;
+    const temperature = req.body.temperature;
+    const bmi = req.body.bmi;
+    const suger = req.body.suger;
+    const kolestrol = req.body.kolestrol;
+    const platelet = req.body.platelet;
+    const oxygen = req.body.oxygen;
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, 'your secret here');
+    const userId = decoded.userId;
+    try {
+      await Registration.findByIdAndUpdate(userId, 
+        { 
+          blood_grp: bloodGrp ,
+          pulse: pulse ,
+          height: height ,
+          weight: weight ,
+          blood_pressure: blood_pressure ,
+          breathing: breathing ,
+          temperature: temperature ,
+          bmi: bmi,
+          suger: suger,
+          kolestrol: kolestrol,
+          platelet: platelet,
+          oxygen: oxygen
+        });
+      res.send({ Status: "ok" });
+    } catch (error) {
+      res.send({ Status: "error", data: error });
+    }
+  });
+
+});
 
 module.exports = router;

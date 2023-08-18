@@ -5,6 +5,9 @@ const cors = require('cors');
 const app = express();
 const multer = require('multer');
 require("dotenv").config();
+const fs = require('fs');  //OCR
+//const { pdfToImages } = require('./OCR_Process/pdfProcessing');   //OCR
+
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -36,3 +39,20 @@ mongoose.connect(URL)
 app.listen(PORT, ()=>{
     console.log(`server is running on port: ${PORT}`);
 });
+
+
+//OCR
+
+//const pdfFilePath = './Test_Docs/Assignment_1.pdf';
+//const pdfBuffer = fs.readFileSync(pdfFilePath);
+
+//console.log('PDF Buffer:', pdfBuffer); // Check the content of the buffer
+
+//pdfToImages(pdfBuffer)
+  //.then((images) => performOCR(images))
+  //.then((extractedTexts) => {
+  //  console.log('Extracted Texts:', extractedTexts);
+  //})
+  //.catch((error) => {
+  //  console.error('Error:', error);
+  //});

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './fileUploadCom.css'
 import axios from 'axios';
-import {URL} from '../env'
+import {URL} from '../env';
+import DatePicker from 'react-datepicker'; // Import the DatePicker component
+import 'react-datepicker/dist/react-datepicker.css'; // Import the DatePicker styles
 
 function FileUploadCom() {
 
@@ -9,6 +11,8 @@ function FileUploadCom() {
   const [file, setFile] = useState(null);
   const[image,setImage]=useState("");
   var catogorystring =null;
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null); // State for selected date
 
   const handleFileInputChange = (e) => {
     setFile(e.target.files[0]);
@@ -61,7 +65,10 @@ function FileUploadCom() {
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
-
+  // Handler for date selection
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
     
     
@@ -128,8 +135,12 @@ function FileUploadCom() {
                 <div className="upload-details">
                     <div className="details-item">
                         <label>Date: </label>
-                        <input type='text' placeholder=''></input>
-                    </div>
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={handleDateChange}
+                          placeholderText="Select a date" // Placeholder text when no date is selected
+                        />
+                   </div>
                     <div className="details-item">
                         <label>Select Category: </label>
                         <select value={category} onChange={handleCategoryChange}>

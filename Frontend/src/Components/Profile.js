@@ -8,9 +8,98 @@ import axios from "axios";
 import Compressor from "compressorjs"; // Import the compressorjs library
 
 const Profile = () => {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [details, setDetails] = useState({});
+  const [error, setError] = useState(null);
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(URL + '/performOCR', { pdfPath: '../../../mydoc.pdf' });
+      console.log('Call from front 2');
+
+      // Extract details manually from OCR text
+      const ocrText = response.data.ocrTextbyme;
+      const lines = ocrText.split('\n');
+      const extractedDetails = {};
+
+      lines.forEach(line => {
+        if (line.includes('Blood Group:')) {
+          extractedDetails.bloodGrp = line.split('Blood Group:')[1].trim();
+        } else if (line.includes('Pulse:')) {
+          extractedDetails.pulse = line.split('Pulse:')[1].trim();
+        } else if (line.includes('Height:')) {
+          extractedDetails.height = line.split('Height:')[1].trim();
+        } else if (line.includes('Weight:')) {
+          extractedDetails.weight = line.split('Weight:')[1].trim();
+        } else if (line.includes('Blood pressure:')) {
+          extractedDetails.blood_pressure = line.split('Blood pressure:')[1].trim();
+        } else if (line.includes('Breathing:')) {
+          extractedDetails.breathing = line.split('Breathing:')[1].trim();
+        } else if (line.includes('Temperature:')) {
+          extractedDetails.temperature = line.split('Temperature:')[1].trim();
+        } else if (line.includes('BMI:')) {
+          extractedDetails.bmi = line.split('BMI:')[1].trim();
+        } else if (line.includes('Suger:')) {
+          extractedDetails.suger = line.split('Suger:')[1].trim();
+        } else if (line.includes('Kolestrol:')) {
+          extractedDetails.kolestrol = line.split('Kolestrol:')[1].trim();
+        } else if (line.includes('Platelet:')) {
+          extractedDetails.platelet = line.split('Platelet:')[1].trim();
+        } else if (line.includes('Oxygen:')) {
+          extractedDetails.oxygen = line.split('Oxygen:')[1].trim();
+        } 
+      });
+
+      setDetails(extractedDetails);
+
+      uploadOCRtoDB(extractedDetails);
+
+    } catch (error) {
+      setError('Error processing the PDF document.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const uploadOCRtoDB = async (extractedDetails) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(URL + '/OCRtoDB', 
+      { 
+        bloodGrp: extractedDetails.bloodGrp,
+        pulse: extractedDetails.pulse ,
+        height: extractedDetails.height ,
+        weight: extractedDetails.weight ,
+        blood_pressure: extractedDetails.blood_pressure ,
+        breathing: extractedDetails.breathing ,
+        temperature: extractedDetails.temperature,
+        bmi: extractedDetails.bmi ,
+        suger: extractedDetails.suger ,
+        kolestrol: extractedDetails.kolestrol ,
+        platelet: extractedDetails.platelet ,
+        oxygen: extractedDetails.oxygen ,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('OCR details uploaded to the backend.');
+    } catch (error) {
+      console.error('Error uploading OCR details to the backend:', error);
+    }
+  };
+
+
+
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null);
   const [image, setImage] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
 
@@ -193,19 +282,67 @@ const Profile = () => {
 
           <div className="profile-details">
             <h1 className="Name">{userData.firstName} {userData.lastName}</h1>
-            <div className="page-item">
-              <span>Blood Group:</span>
-              <span>A+</span>
-            </div>
+            
             <div className="page-item">
               <span>Height:</span>
-              <span>150cm</span>
+              <span>{userData.height}</span>
             </div>
             <div className="page-item">
               <span>Weight:</span>
-              <span>60kg</span>
+              <span>{userData.weight}</span>
             </div>
             <div className="page-item">
+              <span>Blood Group:</span>
+              <span>{userData.blood_grp}</span>
+            </div>
+            <div className="page-item">
+              <span>Blood pressure:</span>
+              <span>{userData.blood_pressure}</span>
+            </div>
+            <div className="page-item">
+              <span>Breathing</span>
+              <span>{userData.breathing}</span>
+            </div>
+            <div className="page-item">
+              <span>Heart Pulses:</span>
+              <span>{userData.pulse}</span>
+            </div>
+            <div className="page-item">
+              <span>Avg. Body Temp:</span>
+              <span>{userData.temperature}</span>
+            </div>
+
+            <div className="page-item">
+              <span>BMI Value:</span>
+              <span>{userData.bmi}</span>
+            </div>
+            <div className="page-item">
+              <span>Suger Level:</span>
+              <span>{userData.suger}</span>
+            </div>
+            <div className="page-item">
+              <span>Kolestrol Level:</span>
+              <span>{userData.kolestrol}</span>
+            </div>
+            <div className="page-item">
+              <span>Platelet count:</span>
+              <span>{userData.platelet}</span>
+            </div>
+            <div className="page-item">
+              <span>Oxygen Level:</span>
+              <span>{userData.oxygen}</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div className="combined-container">
+          <div className="detials-container">
+          <div className="page-item">
+              <span>Gender:</span>
+              <span>Male</span>
+            </div>
+          <div className="page-item">
               <span>Date of Birth:</span>
               <span>{userData.dateOfBirth.slice(0, 10)}</span>
             </div>
@@ -217,31 +354,7 @@ const Profile = () => {
               <span>Email:</span>
               <span>{userData.email}</span>
             </div>
-            <div className="page-item">
-              <span>Gender:</span>
-              <span>Male</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="combined-container">
-          <div className="detials-container">
-            <div className="page-item">
-              <span>Blood pressure:</span>
-              <span>80 mmHg</span>
-            </div>
-            <div className="page-item">
-              <span>Breathing</span>
-              <span>16 breaths/min</span>
-            </div>
-            <div className="page-item">
-              <span>Pulse:</span>
-              <span>72 beats/min</span>
-            </div>
-            <div className="page-item">
-              <span>Temperature:</span>
-              <span>97.8°F</span>
-            </div>
+            
           </div>
           <div className="reoprts-container">
             <div className="reprts-heading"><span>My Medical Reports</span></div>
@@ -345,6 +458,15 @@ const Profile = () => {
             </button>
           </Link>
         </div>
+
+        <div className="p-button" >
+        <form onSubmit={handleFormSubmit}>
+        <button className="buttonlogout" type="submit" disabled={isLoading}>
+          {isLoading ? <span className="labletext">Loading...</span> : <span className="labletext">Scan Docs</span>}
+        </button>
+      </form>
+        </div>
+
         <div className="p-button" >
           <button className="buttonlogout" onClick={handleLogout}>
             <span className="labletext">Logout</span>
