@@ -14,6 +14,8 @@
   }
   
   .doctor-details {
+    display: flex;
+    flex-direction: column;
     text-align: center;
     margin-bottom: 20px;
   }
@@ -35,7 +37,7 @@
 
   /* CSS for the "real-doc" class */
 .real-doc {
-  width: 500px; /* Set the desired width */
-  height: 500px; /* Set the desired height */
+  margin: auto;
+  width: 100%; /* Set the desired width */
   border-radius: 50%; /* Make it circular by setting the border-radius to half of the width/height */
 }

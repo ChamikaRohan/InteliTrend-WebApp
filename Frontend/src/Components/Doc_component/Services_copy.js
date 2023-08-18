@@ -34,16 +34,16 @@ import {
   DialogContentText,
   DialogActions,
   TextField,
-} from '@mui/material';
+} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -100,12 +100,12 @@ const DoctorCard = ({ item }) => {
   const [open, setOpen] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
-        setErrorMessage('');
+        setErrorMessage("");
       }, 1000);
 
       return () => clearTimeout(timer);
@@ -115,26 +115,61 @@ const DoctorCard = ({ item }) => {
   const handleBookAppointment = () => {
     if (selectedDate) {
       // Send appointment details to backend
+      const token = localStorage.getItem('token');
+
       const appointmentData = {
         doctorId: item._id,
         date: selectedDate,
       };
-      console.log("done: ", appointmentData);
+
       setSelectedDate(null);
+      try {
+        console.log("done: ", appointmentData);
+        axios.post(URL + "/book-appointment", appointmentData, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include JWT token in request headers
+          },
+        });
+        console.log("done 2: ");
+      } catch (error) {
+        console.log("error on POST", error);
+      }
       // Make an API call to send appointmentData to your backend
     } else {
-      setErrorMessage('Please select a date !!!');
+      setErrorMessage("Please select a date !!!");
     }
-
   };
 
   const handleOpen = () => {
     setOpen(true);
   };
 
+    const [profilePicture, setProfilePicture] = useState("");
+
+  function fetchProfilePicture() {
+    const token = localStorage.getItem("token");
+    console.log("done");
+
+    axios
+      .get(URL + "/getDocPic", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.success) {
+          const { image } = res.data;
+          setProfilePicture(image);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   const handleClose = () => {
     setOpen(false);
-    setErrorMessage('');
+    setErrorMessage("");
   };
 
   return (
@@ -152,7 +187,7 @@ const DoctorCard = ({ item }) => {
       >
         <CardMedia
           component="img"
-          image={LoginImage}
+          image={item.image || LoginImage}
           alt="random"
           sx={{ flexGrow: 1 }}
         />
@@ -203,13 +238,13 @@ const DoctorCard = ({ item }) => {
               value={selectedDate}
               onChange={setSelectedDate}
               viewRenderers={{
-                hours: renderTimeViewClock
+                hours: renderTimeViewClock,
               }}
               renderInput={(props) => <TextField {...props} />}
             />
           </LocalizationProvider>
           <DialogActions>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <Button autoFocus onClick={handleBookAppointment}>
               book an appointment
             </Button>

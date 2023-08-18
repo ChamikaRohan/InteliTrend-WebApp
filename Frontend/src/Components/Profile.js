@@ -1,5 +1,20 @@
-import "./profile.css"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList, ResponsiveContainer, PolarAngleAxis, RadialBarChart, RadialBar, LineChart, Line } from 'recharts';
+import "./profile.css";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LabelList,
+  ResponsiveContainer,
+  PolarAngleAxis,
+  RadialBarChart,
+  RadialBar,
+  LineChart,
+  Line,
+} from "recharts";
 import profileImage from "../Images/profile-image.jpg";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,9 +55,9 @@ const Profile = () => {
     });
   }
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   function uploadImage() {
-    fetch(URL+"/uploadpropic", {
+    fetch(URL + "/uploadpropic", {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -62,15 +77,15 @@ const Profile = () => {
       });
   }
 
-
   function fetchProfilePicture() {
-    const token = localStorage.getItem('token');
-  
-    axios.get(URL+"/getpropic", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(URL + "/getpropic", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         if (res.data.success) {
           const { image } = res.data;
@@ -82,21 +97,17 @@ const Profile = () => {
       });
   }
 
-
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-
-        const token = localStorage.getItem('token');
-
+        const token = localStorage.getItem("token");
 
         if (!token) {
-          throw new Error('No token found');
-          console.log('Eror in token variable');
+          throw new Error("No token found");
+          console.log("Eror in token variable");
         }
 
-        const response = await axios.get(URL+'/profile', {
+        const response = await axios.get(URL + "/profile", {
           headers: {
             Authorization: `Bearer ${token}`, // Include JWT token in request headers
           },
@@ -108,7 +119,6 @@ const Profile = () => {
       }
     };
 
-
     fetchUserData();
   }, []);
 
@@ -117,82 +127,97 @@ const Profile = () => {
   }
 
   if (!userData) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}><div id="wifi-loader">
-    <svg class="circle-outer" viewBox="0 0 86 86">
-        <circle class="back" cx="43" cy="43" r="40"></circle>
-        <circle class="front" cx="43" cy="43" r="40"></circle>
-        <circle class="new" cx="43" cy="43" r="40"></circle>
-    </svg>
-    <svg class="circle-middle" viewBox="0 0 60 60">
-        <circle class="back" cx="30" cy="30" r="27"></circle>
-        <circle class="front" cx="30" cy="30" r="27"></circle>
-    </svg>
-    <svg class="circle-inner" viewBox="0 0 34 34">
-        <circle class="back" cx="17" cy="17" r="14"></circle>
-        <circle class="front" cx="17" cy="17" r="14"></circle>
-    </svg>
-    <div class="text" data-text="Loading"></div>
-</div></div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        <div id="wifi-loader">
+          <svg class="circle-outer" viewBox="0 0 86 86">
+            <circle class="back" cx="43" cy="43" r="40"></circle>
+            <circle class="front" cx="43" cy="43" r="40"></circle>
+            <circle class="new" cx="43" cy="43" r="40"></circle>
+          </svg>
+          <svg class="circle-middle" viewBox="0 0 60 60">
+            <circle class="back" cx="30" cy="30" r="27"></circle>
+            <circle class="front" cx="30" cy="30" r="27"></circle>
+          </svg>
+          <svg class="circle-inner" viewBox="0 0 34 34">
+            <circle class="back" cx="17" cy="17" r="14"></circle>
+            <circle class="front" cx="17" cy="17" r="14"></circle>
+          </svg>
+          <div class="text" data-text="Loading"></div>
+        </div>
+      </div>
+    );
   }
 
   const data = [
-    { goal: 'Cardiology', amount: 20 },
-    { goal: 'Pediatrician', amount: 20 },
-    { goal: 'Pediatrician', amount: 10 },
-    { goal: 'Pediatrician', amount: 14 },
-    { goal: 'Pediatrician', amount: 24 },
+    { goal: "Cardiology", amount: 20 },
+    { goal: "Pediatrician", amount: 20 },
+    { goal: "Pediatrician", amount: 10 },
+    { goal: "Pediatrician", amount: 14 },
+    { goal: "Pediatrician", amount: 24 },
   ];
 
-  const data1 = [
-    { name: 'L1', value: 40 }
-  ];
+  const data1 = [{ name: "L1", value: 40 }];
 
   const circleSize = 250;
 
   const data2 = [
-    { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Feb', uv: 3000, pv: 1398, amt: 2210 },
-    { name: 'Mar', uv: 2000, pv: 9800, amt: 2290 },
-    { name: 'Apr', uv: 2780, pv: 3908, amt: 2000 },
-    { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
-    { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
-    { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 },
+    { name: "Jan", uv: 4000, pv: 2400, amt: 2400 },
+    { name: "Feb", uv: 3000, pv: 1398, amt: 2210 },
+    { name: "Mar", uv: 2000, pv: 9800, amt: 2290 },
+    { name: "Apr", uv: 2780, pv: 3908, amt: 2000 },
+    { name: "May", uv: 1890, pv: 4800, amt: 2181 },
+    { name: "Jun", uv: 2390, pv: 3800, amt: 2500 },
+    { name: "Jul", uv: 3490, pv: 4300, amt: 2100 },
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/Login');
+    localStorage.removeItem("token");
+    navigate("/Login");
   };
 
   return (
-    <div className='profile'>
+    <div className="profile">
       <div className="profile-container">
         <div className="pic-container">
-
           <label for="file-input" className="plus">
-            
-          <label htmlFor="fileInput" className="custom-file-input">
-  +
-</label>
-<input
-  id="fileInput"
-  type="file"
-  className="pro"
-  accept="image/*"
-  onChange={convertToBase64}
-  style={{ display: 'none' }}
-/>
+            <label htmlFor="fileInput" className="custom-file-input">
+              +
+            </label>
+            hello
+            <input
+              id="fileInput"
+              type="file"
+              className="pro"
+              accept="image/*"
+              onChange={convertToBase64}
+              style={{ display: "none" }}
+            />
           </label>
 
-          <img src={profilePicture} className="profile-image" alt="Profile Picture" />
-          <button type="button" className="uploadbut" onClick={uploadImage}>&#10004;</button>
-
+          <img
+            src={profilePicture}
+            className="profile-image"
+            alt="Profile Picture"
+          />
+          <button type="button" className="uploadbut" onClick={uploadImage}>
+            &#10004;
+          </button>
 
           <div className="profile-details">
-            <h1 className="Name">{userData.firstName} {userData.lastName}</h1>
+            <h1 className="Name">
+              {userData.firstName} {userData.lastName}
+            </h1>
             <div className="page-item">
               <span>Blood Group:</span>
               <span>A+</span>
@@ -244,26 +269,71 @@ const Profile = () => {
             </div>
           </div>
           <div className="reoprts-container">
-            <div className="reprts-heading"><span>My Medical Reports</span></div>
+            <div className="reprts-heading">
+              <span>My Medical Reports</span>
+            </div>
 
-            <Link to='/GeneralFiles'> <button type='submit' className='repot-button'>General Reports</button> </Link> 
-            <Link to='/HeartFiles'> <button type='submit' className='repot-button'>Heart Related</button> </Link> 
-            <Link to='/BrainFiles'> <button type='submit' className='repot-button'>Brain Related</button> </Link> 
-            <Link to='/DiabeticFiles'> <button type='submit' className='repot-button'>Diabetics</button> </Link> 
-            <Link to='/BfractureFiles'> <button type='submit' className='repot-button'>Bone fractures</button> </Link> 
-
+            <Link to="/GeneralFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                General Reports
+              </button>{" "}
+            </Link>
+            <Link to="/HeartFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Heart Related
+              </button>{" "}
+            </Link>
+            <Link to="/BrainFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Brain Related
+              </button>{" "}
+            </Link>
+            <Link to="/DiabeticFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Diabetics
+              </button>{" "}
+            </Link>
+            <Link to="/BfractureFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Bone fractures
+              </button>{" "}
+            </Link>
           </div>
         </div>
 
         <div className="charts">
-          <div className='barchart-container'>
-            <div className="barchart-head"><span>Health Goals</span></div>
+          <div className="barchart-container">
+            <div className="barchart-head">
+              <span>Health Goals</span>
+            </div>
             <div className="barchart">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={430} height={170} data={data} layout="vertical">
+                <BarChart
+                  width={430}
+                  height={170}
+                  data={data}
+                  layout="vertical"
+                >
                   <XAxis type="number" orientation="top" stroke="#285A64" />
-                  <YAxis type="category" dataKey="none" axisLine={false} dx={-5} tickLine={false} style={{ fill: "#4D9B98" }} />
-                  <Bar background dataKey="amount" fill="#4D9B98" barSize={{ height: 26 }}>
+                  <YAxis
+                    type="category"
+                    dataKey="none"
+                    axisLine={false}
+                    dx={-5}
+                    tickLine={false}
+                    style={{ fill: "#4D9B98" }}
+                  />
+                  <Bar
+                    background
+                    dataKey="amount"
+                    fill="#4D9B98"
+                    barSize={{ height: 26 }}
+                  >
                     <LabelList dataKey="goal" style={{ fill: "black" }} />
                   </Bar>
                 </BarChart>
@@ -272,7 +342,9 @@ const Profile = () => {
           </div>
 
           <div className="piechart-container">
-            <div className="piechart-head"><span>Health Goals</span></div>
+            <div className="piechart-head">
+              <span>Health Goals</span>
+            </div>
             <div className="piechart">
               <ResponsiveContainer background="yellow">
                 <RadialBarChart
@@ -314,10 +386,6 @@ const Profile = () => {
             </div>
           </div>
         </div>
-
-
-
-
       </div>
 
       <div className="linechart-container">
@@ -329,7 +397,12 @@ const Profile = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
+              <Line
+                type="monotone"
+                dataKey="pv"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
               <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
             </LineChart>
           </ResponsiveContainer>
@@ -337,25 +410,39 @@ const Profile = () => {
       </div>
 
       <div className="profile-buttons">
-        <div className="p-button" >
-          <Link to='/FileUpload'>
+        <div className="p-button">
+          <Link to="/FileUpload">
             <button className="buttonupload">
-              <svg class="svg-icon" width="24" viewBox="0 0 24 24" height="24" fill="none"><g stroke-width="2" stroke-linecap="round" stroke="#ffffff" fill-rule="evenodd" clip-rule="evenodd"><path d="m3 7h17c.5523 0 1 .44772 1 1v11c0 .5523-.4477 1-1 1h-16c-.55228 0-1-.4477-1-1z"></path><path d="m3 4.5c0-.27614.22386-.5.5-.5h6.29289c.13261 0 .25981.05268.35351.14645l2.8536 2.85355h-10z"></path></g></svg>
+              <svg
+                class="svg-icon"
+                width="24"
+                viewBox="0 0 24 24"
+                height="24"
+                fill="none"
+              >
+                <g
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke="#ffffff"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                >
+                  <path d="m3 7h17c.5523 0 1 .44772 1 1v11c0 .5523-.4477 1-1 1h-16c-.55228 0-1-.4477-1-1z"></path>
+                  <path d="m3 4.5c0-.27614.22386-.5.5-.5h6.29289c.13261 0 .25981.05268.35351.14645l2.8536 2.85355h-10z"></path>
+                </g>
+              </svg>
               <span className="labletext">Upload Files</span>
             </button>
           </Link>
         </div>
-        <div className="p-button" >
+        <div className="p-button">
           <button className="buttonlogout" onClick={handleLogout}>
             <span className="labletext">Logout</span>
           </button>
         </div>
-
-
       </div>
-
     </div>
-  )
-}
+  );
+};
 
 export default Profile;

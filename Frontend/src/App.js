@@ -24,7 +24,6 @@ import OtherPage from './Pages/FilesPages/OtherPage';
 import TestUp from './Pages/TestUp';
 import Show from './Pages/Show';
 import './App.css';
-import CalendarComponent from './Components/Doc_component/calender';
 
 
 function App() {
@@ -55,7 +54,7 @@ function App() {
       <Route path="/OtherFiles" element={<OtherPage/>}/>
       <Route path="/Up" element={<TestUp/>}/>
       <Route path="/Show" element={<Show/>}/>
-      <Route path='/calender' element={<CalendarComponent/>}/>
+
     </Routes>
     </Router>
   );
