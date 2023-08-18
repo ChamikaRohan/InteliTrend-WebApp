@@ -194,7 +194,7 @@ const DoctorCard = ({ item }) => {
 
         <CardContent sx={{ flexGrow: 1 }}>
           <Typography gutterBottom variant="h5" component="h2">
-            {item.docname}
+            Dr. {item.docname}
           </Typography>
           <Typography>
             Speciality: {item.speciality}
@@ -226,9 +226,11 @@ const DoctorCard = ({ item }) => {
               Speciality: {item.speciality}
               <br />
               Hospital: {item.workingHospital}
+              <br/>
+              Experience: {item.experience} Years
               <br />
               <br />
-              Description: {item.description}
+              {item.description}
             </DialogContentText>
             {/* Add any other content or actions you want in the modal */}
           </DialogContent>
