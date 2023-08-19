@@ -1,6 +1,7 @@
 import "./profile.css"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList, ResponsiveContainer, PolarAngleAxis, RadialBarChart, RadialBar, LineChart, Line } from 'recharts';
 import profileImage from "../Images/profile-image.jpg";
+import dashboardImage from "../Images/dashboard_image.jpg"
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { URL } from "../env";
@@ -19,7 +20,7 @@ const Profile = () => {
     setError(null);
 
     try {
-      const response = await axios.post(URL + '/performOCR', { pdfPath: '../../../mydoc.pdf' });
+      const response = await axios.post(URL + '/performOCR', { pdfPath: '../../../../mydoc.pdf' });
       console.log('Call from front 2');
 
       // Extract details manually from OCR text
@@ -95,8 +96,6 @@ const Profile = () => {
       console.error('Error uploading OCR details to the backend:', error);
     }
   };
-
-
 
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
@@ -256,8 +255,20 @@ const Profile = () => {
     navigate('/Login');
   };
 
+  const healthTips = [
+    "Stay hydrated by drinking enough water throughout the day.",
+    "Eat a balanced diet rich in fruits, vegetables, and whole grains.",
+    "Get regular exercise to keep your body and mind healthy.",
+    "Practice good sleep hygiene for better quality sleep.",
+    "Manage stress through relaxation techniques like meditation.",
+    "Get regular exercise to keep your body and mind healthy.",
+        
+    // Add more tips here
+  ];
+
   return (
     <div className='profile'>
+      
       <div className="profile-container">
         <div className="pic-container">
 
@@ -338,6 +349,7 @@ const Profile = () => {
 
         <div className="combined-container">
           <div className="detials-container">
+            <h4>General Details</h4>
           <div className="page-item">
               <span>Gender:</span>
               <span>Male</span>
@@ -366,10 +378,33 @@ const Profile = () => {
             <Link to='/BfractureFiles'> <button type='submit' className='repot-button'>Bone fractures</button> </Link> 
 
           </div>
+          <div className="reoprts-container">
+
+          <Link to='/FileUpload'> <button type='submit' className='repot1-button'>Upload Files</button> </Link> 
+
+            {/* <div className="repot1-button" >
+              <form onSubmit={handleFormSubmit}>
+                <button className="buttonlogout" type="submit" disabled={isLoading}>
+                  {isLoading ? <span className="labletext">Loading...</span> : <span className="labletext">Scan Docs</span>}
+                </button>
+              </form>
+            </div> */}
+
+
+            <form onSubmit={handleFormSubmit}>
+              <button className="repot1-button" type="submit" disabled={isLoading}>
+                {isLoading ? <span className="repot1-button">Loading...</span> : <span className="repot1-button">Scan Docs</span>}
+              </button>
+            </form>
+
+
+            <button type='submit' onClick={handleLogout} className='repot1-button'>Logout</button>  
+           
+          </div>
         </div>
 
         <div className="charts">
-          <div className='barchart-container'>
+          {/* <div className='barchart-container'>
             <div className="barchart-head"><span>Health Goals</span></div>
             <div className="barchart">
               <ResponsiveContainer width="100%" height="100%">
@@ -382,58 +417,35 @@ const Profile = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+          </div> */}
+
+          
+
+          <div className="piechart-container">
+
+            <div className="health-tips">
+            <h3>Daily Health Tips</h3>
+            {healthTips.map((tip, index) => (
+            <div key={index} className="health-tip">
+              &#8226; {tip}
+            </div>
+            ))}
+            </div>
           </div>
 
           <div className="piechart-container">
-            <div className="piechart-head"><span>Health Goals</span></div>
-            <div className="piechart">
-              <ResponsiveContainer background="yellow">
-                <RadialBarChart
-                  width={circleSize}
-                  height={circleSize}
-                  cx={circleSize / 2}
-                  cy={circleSize / 2}
-                  innerRadius={100}
-                  outerRadius={110}
-                  barSize={10}
-                  data={data1}
-                  startAngle={90}
-                  endAngle={-270}
-                >
-                  <PolarAngleAxis
-                    type="number"
-                    domain={[0, 100]}
-                    angleAxisId={0}
-                    tick={false}
-                  />
-                  <RadialBar
-                    background
-                    clockWise
-                    dataKey="value"
-                    cornerRadius={circleSize / 2}
-                    fill="#82ca9d"
-                  />
-                  <text
-                    x={circleSize / 2}
-                    y={circleSize / 2}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    className="progress-label"
-                  >
-                    25
-                  </text>
-                </RadialBarChart>
-              </ResponsiveContainer>
+            {/* <img src={dashboardImage} alt="dashboard" className="dashboardImage"/> */}
+            <div className="user-avatar">
+            <h4 className="glowing-text">Hi! {userData.firstName} {userData.lastName}</h4>
+              <img src={dashboardImage} alt="User Avatar" className="avatar" />
             </div>
           </div>
+          
         </div>
-
-
-
 
       </div>
 
-      <div className="linechart-container">
+      {/* <div className="linechart-container">
         <div className="linechart">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart width={600} height={300} data={data2}>
@@ -447,9 +459,9 @@ const Profile = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </div> */}
 
-      <div className="profile-buttons">
+      {/* <div className="profile-buttons">
         <div className="p-button" >
           <Link to='/FileUpload'>
             <button className="buttonupload">
@@ -458,23 +470,12 @@ const Profile = () => {
             </button>
           </Link>
         </div>
-
-        <div className="p-button" >
-        <form onSubmit={handleFormSubmit}>
-        <button className="buttonlogout" type="submit" disabled={isLoading}>
-          {isLoading ? <span className="labletext">Loading...</span> : <span className="labletext">Scan Docs</span>}
-        </button>
-      </form>
-        </div>
-
         <div className="p-button" >
           <button className="buttonlogout" onClick={handleLogout}>
             <span className="labletext">Logout</span>
           </button>
         </div>
-
-
-      </div>
+      </div> */}
 
     </div>
   )

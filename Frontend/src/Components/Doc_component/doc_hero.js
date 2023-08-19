@@ -7,9 +7,7 @@ export default function Doc_hero() {
     <div className="hero-container">
       <div className="hero-content">
         <h1 className='topic_doc'>Channel a Doctor Online!</h1>
-        <Link to='/Login'>
-        <button type="button" class="but">Click here to Login</button>
-        </Link>
+        
      
       </div>
     </div>
