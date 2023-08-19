@@ -18,7 +18,55 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LoginImage from "../../Images/login-form-image.jpg";
-import {URL} from '../../env'
+import { URL } from "../../env";
+import Modal from "@mui/material/Modal";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
 
 function Copyright() {
   return (
@@ -38,6 +86,16 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const theme = createTheme();
 
 export default function Album(userData) {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const [specialty, setSpecialty] = useState("");
 
   const handleSpecialtyChange = (e) => {
@@ -50,12 +108,9 @@ export default function Album(userData) {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch(
-          URL+`/doclist?specialty=${specialty}`,
-          {
-            method: "GET",
-          }
-        );
+        const response = await fetch(URL + `/doclist?specialty=${specialty}`, {
+          method: "GET",
+        });
         const data = await response.json();
         setData(data.data);
       } catch (error) {
@@ -132,7 +187,6 @@ export default function Album(userData) {
                         alt="random"
                         sx={{ flexGrow: 1 }}
                       />
-
                       <CardContent sx={{ flexGrow: 1 }}>
                         <Typography gutterBottom variant="h5" component="h2">
                           {item.docname}
@@ -144,8 +198,49 @@ export default function Album(userData) {
                         </Typography>
                       </CardContent>
                       <CardActions>
-                      <SpecLink to='/DocProfilePage'> <Button size="small">View</Button> </SpecLink>
+                        <Button variant="outlined" onClick={handleOpen}>
+                          View
+                        </Button>
                       </CardActions>
+                      <BootstrapDialog
+                        onClose={handleClose}
+                        aria-labelledby="customized-dialog-title"
+                        open={open}
+                      >
+                        <BootstrapDialogTitle
+                          id="customized-dialog-title"
+                          onClose={handleClose}
+                        >
+                          {item.docname}
+                        </BootstrapDialogTitle>
+                        <DialogContent dividers>
+                          <Typography gutterBottom>
+                            Cras mattis consectetur purus sit amet fermentum.
+                            Cras justo odio, dapibus ac facilisis in, egestas
+                            eget quam. Morbi leo risus, porta ac consectetur ac,
+                            vestibulum at eros.
+                          </Typography>
+                          <Typography gutterBottom>
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Vivamus sagittis lacus vel augue
+                            laoreet rutrum faucibus dolor auctor.
+                          </Typography>
+                          <Typography gutterBottom>
+                            Aenean lacinia bibendum nulla sed consectetur.
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Donec sed odio dui. Donec
+                            ullamcorper nulla non metus auctor fringilla.
+                          </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button autoFocus onClick={handleClose}>
+                            Place a Book
+                          </Button>
+                          <Button autoFocus onClick={handleClose}>
+                            Save changes
+                          </Button>
+                        </DialogActions>
+                      </BootstrapDialog>
                     </Card>
                   </Grid>
                 )

@@ -40,7 +40,22 @@ const DoctorSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  appointments: [
+    {
+      name: String,
+      date: Date,
+    },
+  ],
+  description: {
+    type: String,
+    required: false
+  },
+  image: {
+    type: String,
+    required: false
   }
+  
 });
 
 const Doctor = mongoose.model('Doctor', DoctorSchema, 'Doctors');

@@ -3,7 +3,7 @@ import Header from '../Components/header'
 import Footer from '../Components/Footer'
 import Doc_hero from '../Components/Doc_component/doc_hero'
 import Search from '../Components/Doc_component/search'
-import Services from '../Components/Doc_component/Services'
+import Services from '../Components/Doc_component/Services_copy'
 
 export default function Doctors() {
   return (
