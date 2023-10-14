@@ -38,8 +38,8 @@ export default function Services() {
   };
 
   return (
-    <div className="popup-container">
-    <h1>What You Can Get With Us?</h1>
+    <div className="popup-container pt-24">
+      <h1 className='text-3xl	text-center pb-5'>What You Can Get With Us?</h1>
       <div className="columns">
         <div className="card" onClick={togglePopupchanneling}>
           <img src={ChannelingImg} />

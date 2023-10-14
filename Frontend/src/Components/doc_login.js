@@ -2,14 +2,15 @@ import './loginform.css'
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import {URL} from '../env'
+import {URL} from '../env';
+import WelcomeScreen from './WelcomeScreen';
 
 export default function DocLogin() {
-
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
     const [errorMessage, SetErrorMessage] = useState('');
-
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [showWelcomeScreen, setShowWelcomeScreen] = useState(false); // State for the welcome screen
     const navigate = useNavigate();
 
     const handleLogin = async ()=> {
@@ -23,12 +24,15 @@ export default function DocLogin() {
 
             const token = response.data.token;
             localStorage.setItem('token', token);
-            navigate('/Home');
+            setShowSuccessMessage(true);
+
+            // Show the welcome screen
+            setShowWelcomeScreen(true);
         }
-        catch(error){
-            console.log(error.response.data.msg);
-            SetErrorMessage('Invalid Email or Password !!!')
-        }
+    catch (error) {
+        console.log(error.response.data.msg);
+        SetErrorMessage('Invalid Email or Password !!!');
+    }
     };
 
     useEffect(()=>{
@@ -68,7 +72,12 @@ export default function DocLogin() {
                     </div>  
 
                     {errorMessage && <div className='error_message'>{errorMessage}</div>}
-                    <button className='login-button' onClick={handleLogin}>LOG IN</button>
+                        {showSuccessMessage && <div className='success_message'>Login successful!</div>}
+
+                        <button className='login-button' onClick={handleLogin}>LOG IN</button>
+
+                        {/* Conditional rendering of the WelcomeScreen component */}
+                        {showWelcomeScreen && <WelcomeScreen onClose={() => navigate('/Home')} />}
                     
                 </div> 
                

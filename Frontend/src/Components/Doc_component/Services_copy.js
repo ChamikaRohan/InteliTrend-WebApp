@@ -101,6 +101,7 @@ const DoctorCard = ({ item }) => {
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (errorMessage) {
@@ -112,10 +113,24 @@ const DoctorCard = ({ item }) => {
     }
   }, [errorMessage]);
 
-  const handleBookAppointment = () => {
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  const [loadingMessage, setLoadingMessage] = useState("");
+
+  const handleBookAppointment = async () => {
     if (selectedDate) {
-      // Send appointment details to backend
-      const token = localStorage.getItem('token');
+      // Set loading message
+      setLoadingMessage("Loading appointment");
+
+      const token = localStorage.getItem("token");
 
       const appointmentData = {
         doctorId: item._id,
@@ -123,20 +138,37 @@ const DoctorCard = ({ item }) => {
       };
 
       setSelectedDate(null);
+
       try {
-        console.log("done: ", appointmentData);
-        axios.post(URL + "/book-appointment", appointmentData, {
+        console.log("appointment: ", appointmentData);
+        await axios.post(URL + "/book-appointment", appointmentData, {
           headers: {
             Authorization: `Bearer ${token}`, // Include JWT token in request headers
           },
         });
-        console.log("done 2: ");
+
+        // If the appointment is booked successfully, set the success message
+        setSuccessMessage("Appointment Booked");
       } catch (error) {
         console.log("error on POST", error);
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          // If the backend provided an error message, set it in the state
+          setErrorMessage(error.response.data.message);
+        } else {
+          // Default error message if no specific message is returned by the backend
+          setErrorMessage("An error occurred while booking the appointment.");
+        }
+      } finally {
+        // Clear loading message
+        setLoadingMessage("");
       }
-      // Make an API call to send appointmentData to your backend
     } else {
-      setErrorMessage("Please select a date !!!");
+      setErrorMessage("Please select a date!!!");
     }
   };
 
@@ -144,7 +176,7 @@ const DoctorCard = ({ item }) => {
     setOpen(true);
   };
 
-    const [profilePicture, setProfilePicture] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
 
   function fetchProfilePicture() {
     const token = localStorage.getItem("token");
@@ -226,7 +258,7 @@ const DoctorCard = ({ item }) => {
               Speciality: {item.speciality}
               <br />
               Hospital: {item.workingHospital}
-              <br/>
+              <br />
               Experience: {item.experience} Years
               <br />
               <br />
@@ -246,6 +278,12 @@ const DoctorCard = ({ item }) => {
             />
           </LocalizationProvider>
           <DialogActions>
+            {loadingMessage && (
+              <p style={{ color: "orange" }}>{loadingMessage}</p>
+            )}
+            {successMessage && (
+              <p style={{ color: "green" }}>{successMessage}</p>
+            )}
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <Button autoFocus onClick={handleBookAppointment}>
               book an appointment
@@ -339,7 +377,6 @@ export default function Album(userData) {
             <option value="Oncologist">Oncologist</option>
             <option value="Psychiatrist">Psychiatrist</option>
             <option value="Pediatrician">Pediatrician</option>
-
           </select>
           <button className="find-doctor-button">Find Doctor</button>
         </div>

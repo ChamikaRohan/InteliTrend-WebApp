@@ -5,6 +5,7 @@ import LoginImage from "../../src/Images/real-doc.jpg";
 import { URL } from "../env";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Typography } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -15,6 +16,8 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Compressor from "compressorjs"; // Import the compressorjs library
 
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -22,6 +25,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 //import Table from '@mui/material/Table';
 // or
 import { Table } from "@mui/material";
+import placeholderImage from '../Images/Doc_loading.jpg';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -46,31 +50,44 @@ const DoctorProfile = ({ doctor }) => {
   const [appointmentData, setappointmentData] = useState(null);
   const [error, setError] = useState(null);
   const [details, setDetails] = useState(null);
+  const [docname, setDocname] = useState(null);
+  const [speciality, setSpeciality] = useState(null);
+  const [hospital, setHospital] = useState(null);
+
+  const fetchAppointmentData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await axios.get(URL + "/docprofile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data; // Return the appointment data
+    } catch (error) {
+      throw error; // Rethrow the error for error handling later
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          throw new Error("No token found");
-        }
-
-        const response = await axios.get(URL + "/docprofile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setDetails(response.data);
-        setappointmentData(response.data.appointments);
-
-        console.log(appointmentData);
+        const appointmentData = await fetchAppointmentData();
+        setappointmentData(appointmentData.appointments);
+        setDocname(appointmentData.docname);
+        setSpeciality(appointmentData.speciality);
+        setHospital(appointmentData.workingHospital);
       } catch (error) {
-        setError(error.response.data.msg);
+        setError(error.response?.data.msg || "An error occurred");
       }
     };
 
-    fetchUserData();
+    fetchData();
   }, []);
 
   function convertToBase64(e) {
@@ -128,8 +145,6 @@ const DoctorProfile = ({ doctor }) => {
 
   function fetchProfilePicture() {
     const token = localStorage.getItem("token");
-    console.log("done");
-
     axios
       .get(URL + "/getDocPic", {
         headers: {
@@ -151,6 +166,49 @@ const DoctorProfile = ({ doctor }) => {
     fetchProfilePicture();
   }, []);
 
+  // Function to delete an appointment
+  const deleteAppointment = async (appointmentId) => {
+    try {
+      // Make a DELETE request to the backend endpoint
+      const response = await axios.delete(
+        `/grp7/api/docprofile/appointments/${appointmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the JWT token in the request header
+          },
+        }
+      );
+
+      // Check if the appointment was deleted successfully
+      if (response.status === 200) {
+        // Handle success (e.g., update the UI, remove the deleted appointment from the UI)
+        console.log("Appointment deleted successfully");
+      }
+    } catch (error) {
+      // Handle any errors (e.g., display an error message to the user)
+      console.error("Error deleting appointment:", error);
+    }
+  };
+
+  // const handleDeleteAppointment = async (appointmentId) => {
+  //   try {
+  //     // Make a DELETE request to delete the appointment
+  //     await axios.delete(URL + `/appointments/${appointmentId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //       },
+  //     });
+
+  //     // Refresh the appointment data
+  //     const updatedAppointmentData = await fetchAppointmentData();
+  //     setappointmentData(updatedAppointmentData);
+
+  //     console.log('Appointment deleted successfully');
+  //   } catch (error) {
+  //     console.error('Error deleting appointment:', error);
+  //   }
+  // };
+
   return (
     <div className="doctor-profile">
       <div className="doctor-details">
@@ -162,7 +220,7 @@ const DoctorProfile = ({ doctor }) => {
           Change profile picture
         </Button> */}
         <div className="img">
-          <img src={profilePicture} alt="Doc_name" className="real-doc" />
+          <img src={profilePicture || placeholderImage} alt="Doc_name" className="real-doc" />
         </div>
 
         <div className="change">
@@ -184,21 +242,35 @@ const DoctorProfile = ({ doctor }) => {
           </button>
         </div>
 
-        {/* Check if details is not null before accessing its properties */}
-        {details !== null ? (
-          <>
-            <h1>Dr. {details.docname}</h1>
-            <h3>{details.speciality}</h3>
-            <p>{details.workingHospital}</p>
-            <p class="doc_main_profile_para">{/* ... (rest of the text) */}</p>
-          </>
-        ) : (
-          <p>Loading doctor details...</p>
-        )}
+        <>
+          <h1>Dr. {docname} </h1>
+          <h3>{speciality}</h3>
+          <p>{hospital}</p>
+        </>
+        <h1>
+          <button className="buttonlogout" onClick={handleLogout}>
+            <span className="labletext">Logout</span>
+          </button>
+        </h1>
       </div>
+      
+
       <TableContainer sx={{ width: "40%" }} component={Paper}>
-        <Table sx={{ width: "100%" }} aria-label="simple table">
-          <TableHead>{/* ... (TableHead content) */}</TableHead>
+        <Table sx={{ width: "100%" }} aria-label="caption table">
+          <TableHead>
+            <TableRow>
+              <Typography variant="h6" style={{ textAlign: "center" }}>
+                APPOINTMENTS
+              </Typography>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">Name</TableCell>
+              <TableCell align="center">Date</TableCell>
+              <TableCell align="center">Time</TableCell>
+              <TableCell align="center"> </TableCell>{" "}
+              {/* Adding an Actions column header */}
+            </TableRow>
+          </TableHead>
           <TableBody>
             {appointmentData !== null ? (
               // Map over the appointmentData only if it's not null
@@ -207,16 +279,48 @@ const DoctorProfile = ({ doctor }) => {
                 const formattedDate = dateObj.toLocaleDateString();
                 const formattedTime = dateObj.toLocaleTimeString();
 
+                // Event handler to delete the appointment
+                const handleDeleteAppointment = async () => {
+                  console.log("sgdsjhnksjaja");
+                  try {
+                    // Make a DELETE request to delete the appointment
+                    await axios.delete(URL + `/appointments/${row._id}`, {
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                          "token"
+                        )}`,
+                      },
+                    });
+
+                    // Handle the appointment deletion in the UI (e.g., remove the deleted row from the table)
+                    // You may need to update the state or re-fetch the appointment data
+
+                    console.log("Appointment deleted successfully");
+                    window.location.reload();
+                  } catch (error) {
+                    console.error("Error deleting appointment:", error);
+                  }
+                };
+
                 return (
                   <TableRow
-                    key={row.name}
+                    key={row._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="middle">{formattedDate}</TableCell>
-                    <TableCell align="middle">{formattedTime}</TableCell>
+                    <TableCell align="center">{formattedDate}</TableCell>
+                    <TableCell align="center">{formattedTime}</TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        aria-label="delete"
+                        size="large"
+                        onClick={handleDeleteAppointment}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 );
               })
@@ -231,9 +335,6 @@ const DoctorProfile = ({ doctor }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <button className="buttonlogout1" onClick={handleLogout}>
-        <span className="labletext">Logout</span>
-      </button>
     </div>
   );
 };

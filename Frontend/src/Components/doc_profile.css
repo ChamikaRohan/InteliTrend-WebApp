@@ -1,6 +1,6 @@
 .doctor-profile {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     padding: 20px;
   }
@@ -14,6 +14,7 @@
   }
   
   .doctor-details {
+    width: 50%;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -42,7 +43,7 @@
   /* CSS for the "real-doc" class */
 .real-doc {
   margin: auto;
-  width: 50%; /* Set the desired width */
+  width: 30%; /* Set the desired width */
   border-radius: 50%; /* Make it circular by setting the border-radius to half of the width/height */
 }
 
@@ -58,4 +59,8 @@
   border-radius: 20px;
   cursor: pointer;
   margin-top: 2%;
+}
+
+.apptable{
+  width: 100%;
 }

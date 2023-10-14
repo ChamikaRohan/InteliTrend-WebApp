@@ -108,6 +108,10 @@ const RegistrationSchema = new mongoose.Schema({
   oxygen: {
     type: String,
     required: false
+  },
+  notification: {
+    type: String,
+    required: false
   }
 
 });

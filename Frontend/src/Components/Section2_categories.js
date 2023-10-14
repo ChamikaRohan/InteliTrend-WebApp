@@ -101,12 +101,17 @@ const images = [
   },
 ];
 
+// ... (your existing imports and code)
+
+const openPopup = (title) => {
+  // Replace this with your popup logic
+  console.log(`Popup opened for`);
+};
+
 export default function ProductCategories() {
   return (
-    <Container component="section" sx={{ mt: 8, mb: 4 }}>
-      <Typography variant="h4" marked="center" align="center" component="h2">
-        Our Features
-      </Typography>
+    <Container component="section" sx={{ mt: 0, mb: 8 }}>
+      <h1 className='text-4xl	text-center'>Our Services</h1>
       <Box sx={{ mt: 8, display: 'flex', flexWrap: 'wrap' }}>
         {images.map((image) => (
           <ImageIconButton
@@ -114,6 +119,7 @@ export default function ProductCategories() {
             style={{
               width: image.width,
             }}
+            onClick={() => openPopup(image.title)}
           >
             <Box
               sx={{
@@ -144,7 +150,7 @@ export default function ProductCategories() {
               <Typography
                 component="h3"
                 variant="h6"
-                color="inherit"
+                color="inherit  "
                 className="imageTitle"
               >
                 {image.title}
@@ -157,4 +163,3 @@ export default function ProductCategories() {
     </Container>
   );
 }
-
