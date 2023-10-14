@@ -29,9 +29,9 @@
   transition: all 0.6s ease;
 }
 
-.sec1_image1:hover {
+/* .sec1_image1:hover {
   transform: scale(1.1);
-}
+} */
 
 .para_text {
   font-size: 16px;

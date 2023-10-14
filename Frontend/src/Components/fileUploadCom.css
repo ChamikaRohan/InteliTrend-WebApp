@@ -260,3 +260,20 @@
     margin-top: 10%;
     margin-bottom: 5%;
   }
+
+/* loginform.css or a separate CSS file */
+
+/* Style for the success message */
+.success_message {
+  background-color: #4CAF50; /* Green background color */
+  color: white; /* White text color */
+  padding: 10px; /* Padding around the message */
+  text-align: center; /* Center-align the text */
+  border-radius: 5px; /* Rounded corners */
+  margin-top: auto; /* Vertically center the message */
+  margin-bottom: auto; /* Vertically center the message */
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+  margin-right: 10px;
+}

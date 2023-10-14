@@ -25,6 +25,7 @@ import TestUp from './Pages/TestUp';
 import Show from './Pages/Show';
 import OCRTest from './Pages/OCRTest'
 import './App.css';
+import Appointments from './Components/Appointments';
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
       <Route path="/Up" element={<TestUp/>}/>
       <Route path="/Show" element={<Show/>}/>
       <Route path="/OCR" element={<OCRTest/>}/>
+      <Route path="/Appointments" element={<Appointments/>}/>
     </Routes>
     </Router>
   );

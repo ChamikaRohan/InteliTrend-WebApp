@@ -1,18 +1,53 @@
-import "./profile.css"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList, ResponsiveContainer, PolarAngleAxis, RadialBarChart, RadialBar, LineChart, Line } from 'recharts';
+import "./profile.css";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LabelList,
+  ResponsiveContainer,
+  PolarAngleAxis,
+  RadialBarChart,
+  RadialBar,
+  LineChart,
+  Line,
+} from "recharts";
 import profileImage from "../Images/profile-image.jpg";
-import dashboardImage from "../Images/dashboard_image.jpg"
+import dashboardImage from "../Images/dashboard_image.jpg";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { URL } from "../env";
 import axios from "axios";
 import Compressor from "compressorjs"; // Import the compressorjs library
 
-const Profile = () => {
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
+const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [details, setDetails] = useState({});
   const [error, setError] = useState(null);
+  const [notify, setNotify] = useState(null);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+    fetchNotify();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    deleteNotify();
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -20,48 +55,52 @@ const Profile = () => {
     setError(null);
 
     try {
-      const response = await axios.post(URL + '/performOCR', { pdfPath: '../../../../mydoc.pdf' });
-      console.log('Call from front 2');
+      const response = await axios.post(URL + "/performOCR", {
+        pdfPath: "../../../../mydoc.pdf",
+      });
+      console.log("Call from front 2");
 
       // Extract details manually from OCR text
       const ocrText = response.data.ocrTextbyme;
-      const lines = ocrText.split('\n');
+      const lines = ocrText.split("\n");
       const extractedDetails = {};
 
-      lines.forEach(line => {
-        if (line.includes('Blood Group:')) {
-          extractedDetails.bloodGrp = line.split('Blood Group:')[1].trim();
-        } else if (line.includes('Pulse:')) {
-          extractedDetails.pulse = line.split('Pulse:')[1].trim();
-        } else if (line.includes('Height:')) {
-          extractedDetails.height = line.split('Height:')[1].trim();
-        } else if (line.includes('Weight:')) {
-          extractedDetails.weight = line.split('Weight:')[1].trim();
-        } else if (line.includes('Blood pressure:')) {
-          extractedDetails.blood_pressure = line.split('Blood pressure:')[1].trim();
-        } else if (line.includes('Breathing:')) {
-          extractedDetails.breathing = line.split('Breathing:')[1].trim();
-        } else if (line.includes('Temperature:')) {
-          extractedDetails.temperature = line.split('Temperature:')[1].trim();
-        } else if (line.includes('BMI:')) {
-          extractedDetails.bmi = line.split('BMI:')[1].trim();
-        } else if (line.includes('Suger:')) {
-          extractedDetails.suger = line.split('Suger:')[1].trim();
-        } else if (line.includes('Kolestrol:')) {
-          extractedDetails.kolestrol = line.split('Kolestrol:')[1].trim();
-        } else if (line.includes('Platelet:')) {
-          extractedDetails.platelet = line.split('Platelet:')[1].trim();
-        } else if (line.includes('Oxygen:')) {
-          extractedDetails.oxygen = line.split('Oxygen:')[1].trim();
-        } 
+      lines.forEach((line) => {
+        if (line.includes("Blood Group:")) {
+          extractedDetails.bloodGrp = line.split("Blood Group:")[1].trim();
+        } else if (line.includes("Pulse:")) {
+          extractedDetails.pulse = line.split("Pulse:")[1].trim();
+        } else if (line.includes("Height:")) {
+          extractedDetails.height = line.split("Height:")[1].trim();
+        } else if (line.includes("Weight:")) {
+          extractedDetails.weight = line.split("Weight:")[1].trim();
+        } else if (line.includes("Blood pressure:")) {
+          extractedDetails.blood_pressure = line
+            .split("Blood pressure:")[1]
+            .trim();
+        } else if (line.includes("Breathing:")) {
+          extractedDetails.breathing = line.split("Breathing:")[1].trim();
+        } else if (line.includes("Temperature:")) {
+          extractedDetails.temperature = line.split("Temperature:")[1].trim();
+        } else if (line.includes("BMI:")) {
+          extractedDetails.bmi = line.split("BMI:")[1].trim();
+        } else if (line.includes("Suger:")) {
+          extractedDetails.suger = line.split("Suger:")[1].trim();
+        } else if (line.includes("Kolestrol:")) {
+          extractedDetails.kolestrol = line.split("Kolestrol:")[1].trim();
+        } else if (line.includes("Platelet:")) {
+          extractedDetails.platelet = line.split("Platelet:")[1].trim();
+        } else if (line.includes("Oxygen:")) {
+          extractedDetails.oxygen = line.split("Oxygen:")[1].trim();
+        }
       });
 
       setDetails(extractedDetails);
 
       uploadOCRtoDB(extractedDetails);
-
+      window.location.reload();
     } catch (error) {
-      setError('Error processing the PDF document.');
+      setError("Error processing the PDF document.");
     } finally {
       setIsLoading(false);
     }
@@ -69,31 +108,33 @@ const Profile = () => {
 
   const uploadOCRtoDB = async (extractedDetails) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(URL + '/OCRtoDB', 
-      { 
-        bloodGrp: extractedDetails.bloodGrp,
-        pulse: extractedDetails.pulse ,
-        height: extractedDetails.height ,
-        weight: extractedDetails.weight ,
-        blood_pressure: extractedDetails.blood_pressure ,
-        breathing: extractedDetails.breathing ,
-        temperature: extractedDetails.temperature,
-        bmi: extractedDetails.bmi ,
-        suger: extractedDetails.suger ,
-        kolestrol: extractedDetails.kolestrol ,
-        platelet: extractedDetails.platelet ,
-        oxygen: extractedDetails.oxygen ,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+      const token = localStorage.getItem("token");
+      await axios.post(
+        URL + "/OCRtoDB",
+        {
+          bloodGrp: extractedDetails.bloodGrp,
+          pulse: extractedDetails.pulse,
+          height: extractedDetails.height,
+          weight: extractedDetails.weight,
+          blood_pressure: extractedDetails.blood_pressure,
+          breathing: extractedDetails.breathing,
+          temperature: extractedDetails.temperature,
+          bmi: extractedDetails.bmi,
+          suger: extractedDetails.suger,
+          kolestrol: extractedDetails.kolestrol,
+          platelet: extractedDetails.platelet,
+          oxygen: extractedDetails.oxygen,
         },
-      });
-      console.log('OCR details uploaded to the backend.');
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("OCR details uploaded to the backend.");
     } catch (error) {
-      console.error('Error uploading OCR details to the backend:', error);
+      console.error("Error uploading OCR details to the backend:", error);
     }
   };
 
@@ -128,9 +169,9 @@ const Profile = () => {
     });
   }
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   function uploadImage() {
-    fetch(URL+"/uploadpropic", {
+    fetch(URL + "/uploadpropic", {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -150,15 +191,54 @@ const Profile = () => {
       });
   }
 
+  function fetchNotify() {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(URL + "/notify", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.success) {
+          const { notification } = res.data;
+          console.log(res.data);
+          setNotify(notification);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  function deleteNotify() {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(URL + "/deletenotify", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.success) {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   function fetchProfilePicture() {
-    const token = localStorage.getItem('token');
-  
-    axios.get(URL+"/getpropic", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(URL + "/getpropic", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         if (res.data.success) {
           const { image } = res.data;
@@ -170,21 +250,17 @@ const Profile = () => {
       });
   }
 
-
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-
-        const token = localStorage.getItem('token');
-
+        const token = localStorage.getItem("token");
 
         if (!token) {
-          throw new Error('No token found');
-          console.log('Eror in token variable');
+          throw new Error("No token found");
+          console.log("Eror in token variable");
         }
 
-        const response = await axios.get(URL+'/profile', {
+        const response = await axios.get(URL + "/profile", {
           headers: {
             Authorization: `Bearer ${token}`, // Include JWT token in request headers
           },
@@ -196,7 +272,6 @@ const Profile = () => {
       }
     };
 
-
     fetchUserData();
   }, []);
 
@@ -205,54 +280,67 @@ const Profile = () => {
   }
 
   if (!userData) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}><div id="wifi-loader">
-    <svg class="circle-outer" viewBox="0 0 86 86">
-        <circle class="back" cx="43" cy="43" r="40"></circle>
-        <circle class="front" cx="43" cy="43" r="40"></circle>
-        <circle class="new" cx="43" cy="43" r="40"></circle>
-    </svg>
-    <svg class="circle-middle" viewBox="0 0 60 60">
-        <circle class="back" cx="30" cy="30" r="27"></circle>
-        <circle class="front" cx="30" cy="30" r="27"></circle>
-    </svg>
-    <svg class="circle-inner" viewBox="0 0 34 34">
-        <circle class="back" cx="17" cy="17" r="14"></circle>
-        <circle class="front" cx="17" cy="17" r="14"></circle>
-    </svg>
-    <div class="text" data-text="Loading"></div>
-</div></div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        <div id="wifi-loader">
+          <svg class="circle-outer" viewBox="0 0 86 86">
+            <circle class="back" cx="43" cy="43" r="40"></circle>
+            <circle class="front" cx="43" cy="43" r="40"></circle>
+            <circle class="new" cx="43" cy="43" r="40"></circle>
+          </svg>
+          <svg class="circle-middle" viewBox="0 0 60 60">
+            <circle class="back" cx="30" cy="30" r="27"></circle>
+            <circle class="front" cx="30" cy="30" r="27"></circle>
+          </svg>
+          <svg class="circle-inner" viewBox="0 0 34 34">
+            <circle class="back" cx="17" cy="17" r="14"></circle>
+            <circle class="front" cx="17" cy="17" r="14"></circle>
+          </svg>
+          <div class="text" data-text="Loading"></div>
+        </div>
+      </div>
+    );
   }
 
   const data = [
-    { goal: 'Cardiology', amount: 20 },
-    { goal: 'Pediatrician', amount: 20 },
-    { goal: 'Pediatrician', amount: 10 },
-    { goal: 'Pediatrician', amount: 14 },
-    { goal: 'Pediatrician', amount: 24 },
+    { goal: "Cardiology", amount: 20 },
+    { goal: "Pediatrician", amount: 20 },
+    { goal: "Pediatrician", amount: 10 },
+    { goal: "Pediatrician", amount: 14 },
+    { goal: "Pediatrician", amount: 24 },
   ];
 
-  const data1 = [
-    { name: 'L1', value: 40 }
-  ];
+  const data1 = [{ name: "L1", value: 40 }];
 
   const circleSize = 250;
 
   const data2 = [
-    { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Feb', uv: 3000, pv: 1398, amt: 2210 },
-    { name: 'Mar', uv: 2000, pv: 9800, amt: 2290 },
-    { name: 'Apr', uv: 2780, pv: 3908, amt: 2000 },
-    { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
-    { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
-    { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 },
+    { name: "Jan", uv: 4000, pv: 2400, amt: 2400 },
+    { name: "Feb", uv: 3000, pv: 1398, amt: 2210 },
+    { name: "Mar", uv: 2000, pv: 9800, amt: 2290 },
+    { name: "Apr", uv: 2780, pv: 3908, amt: 2000 },
+    { name: "May", uv: 1890, pv: 4800, amt: 2181 },
+    { name: "Jun", uv: 2390, pv: 3800, amt: 2500 },
+    { name: "Jul", uv: 3490, pv: 4300, amt: 2100 },
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/Login');
+    localStorage.removeItem("token");
+    navigate("/Login");
+  };
+
+  const handleAppointmnets = () => {
+    navigate("/Appointments");
   };
 
   const healthTips = [
@@ -262,38 +350,42 @@ const Profile = () => {
     "Practice good sleep hygiene for better quality sleep.",
     "Manage stress through relaxation techniques like meditation.",
     "Get regular exercise to keep your body and mind healthy.",
-        
+
     // Add more tips here
   ];
 
   return (
-    <div className='profile'>
-      
+    <div className="profile  pt-24  ">
       <div className="profile-container">
         <div className="pic-container">
-
           <label for="file-input" className="plus">
-            
-          <label htmlFor="fileInput" className="custom-file-input">
-  +
-</label>
-<input
-  id="fileInput"
-  type="file"
-  className="pro"
-  accept="image/*"
-  onChange={convertToBase64}
-  style={{ display: 'none' }}
-/>
+            <label htmlFor="fileInput" className="custom-file-input">
+              +
+            </label>
+            <input
+              id="fileInput"
+              type="file"
+              className="pro"
+              accept="image/*"
+              onChange={convertToBase64}
+              style={{ display: "none" }}
+            />
           </label>
 
-          <img src={profilePicture} className="profile-image" alt="Profile Picture" />
-          <button type="button" className="uploadbut" onClick={uploadImage}>&#10004;</button>
-
+          <img
+            src={profilePicture}
+            className="profile-image"
+            alt="Profile Picture"
+          />
+          <button type="button" className="uploadbut" onClick={uploadImage}>
+            &#10004;
+          </button>
 
           <div className="profile-details">
-            <h1 className="Name">{userData.firstName} {userData.lastName}</h1>
-            
+            <h1 className="Name">
+              {userData.firstName} {userData.lastName}
+            </h1>
+
             <div className="page-item">
               <span>Height:</span>
               <span>{userData.height}</span>
@@ -343,18 +435,38 @@ const Profile = () => {
               <span>Oxygen Level:</span>
               <span>{userData.oxygen}</span>
             </div>
+            <a
+              href="https://docs.google.com/document/d/1-mN4L7kf84nmAGAS6dva7WEd6ba57OBI/edit?usp=sharing&ouid=109149627923589156953&rtpof=true&sd=true"
+              download="mydocx.docx"
+            >
+              <button className="ButDown">Download Template</button>
+            </a>
 
+            <Button variant="outlined" onClick={handleClickOpen}>
+              You have notifications
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Notification</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  {notify} 
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </div>
 
         <div className="combined-container">
           <div className="detials-container">
             <h4>General Details</h4>
-          <div className="page-item">
+            <div className="page-item">
               <span>Gender:</span>
               <span>Male</span>
             </div>
-          <div className="page-item">
+            <div className="page-item">
               <span>Date of Birth:</span>
               <span>{userData.dateOfBirth.slice(0, 10)}</span>
             </div>
@@ -366,21 +478,50 @@ const Profile = () => {
               <span>Email:</span>
               <span>{userData.email}</span>
             </div>
-            
           </div>
           <div className="reoprts-container">
-            <div className="reprts-heading"><span>My Medical Reports</span></div>
+            <div className="reprts-heading">
+              <span>My Medical Reports</span>
+            </div>
 
-            <Link to='/GeneralFiles'> <button type='submit' className='repot-button'>General Reports</button> </Link> 
-            <Link to='/HeartFiles'> <button type='submit' className='repot-button'>Heart Related</button> </Link> 
-            <Link to='/BrainFiles'> <button type='submit' className='repot-button'>Brain Related</button> </Link> 
-            <Link to='/DiabeticFiles'> <button type='submit' className='repot-button'>Diabetics</button> </Link> 
-            <Link to='/BfractureFiles'> <button type='submit' className='repot-button'>Bone fractures</button> </Link> 
-
+            <Link to="/GeneralFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                General Reports
+              </button>{" "}
+            </Link>
+            <Link to="/HeartFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Heart Related
+              </button>{" "}
+            </Link>
+            <Link to="/BrainFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Brain Related
+              </button>{" "}
+            </Link>
+            <Link to="/DiabeticFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Diabetics
+              </button>{" "}
+            </Link>
+            <Link to="/BfractureFiles">
+              {" "}
+              <button type="submit" className="repot-button">
+                Bone fractures
+              </button>{" "}
+            </Link>
           </div>
           <div className="reoprts-container">
-
-          <Link to='/FileUpload'> <button type='submit' className='repot1-button'>Upload Files</button> </Link> 
+            <Link to="/FileUpload">
+              {" "}
+              <button type="submit" className="repot1-button">
+                Upload Files
+              </button>{" "}
+            </Link>
 
             {/* <div className="repot1-button" >
               <form onSubmit={handleFormSubmit}>
@@ -390,16 +531,35 @@ const Profile = () => {
               </form>
             </div> */}
 
-
             <form onSubmit={handleFormSubmit}>
-              <button className="repot1-button" type="submit" disabled={isLoading}>
-                {isLoading ? <span className="repot1-button">Loading...</span> : <span className="repot1-button">Scan Docs</span>}
+              <button
+                className="repot1-button"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="repot1-button">Loading...</span>
+                ) : (
+                  <span className="repot1-button">Scan Docs</span>
+                )}
               </button>
             </form>
 
+            <button
+              type="submit"
+              onClick={handleLogout}
+              className="repot1-button"
+            >
+              Logout
+            </button>
 
-            <button type='submit' onClick={handleLogout} className='repot1-button'>Logout</button>  
-           
+            <button
+              type="submit"
+              className="repot1-button"
+              onClick={handleAppointmnets}
+            >
+              Appointments
+            </button>
           </div>
         </div>
 
@@ -419,30 +579,32 @@ const Profile = () => {
             </div>
           </div> */}
 
-          
-
           <div className="piechart-container">
-
             <div className="health-tips">
-            <h3>Daily Health Tips</h3>
-            {healthTips.map((tip, index) => (
-            <div key={index} className="health-tip">
-              &#8226; {tip}
-            </div>
-            ))}
+              <h3>Daily Health Tips</h3>
+              {healthTips.map((tip, index) => (
+                <div key={index} className="health-tip">
+                  &#8226; {tip}
+                </div>
+              ))}
             </div>
           </div>
 
           <div className="piechart-container">
             {/* <img src={dashboardImage} alt="dashboard" className="dashboardImage"/> */}
             <div className="user-avatar">
-            <h4 className="glowing-text">Hi! {userData.firstName} {userData.lastName}</h4>
-              <img src={dashboardImage} alt="User Avatar" className="avatar" />
+              <h4 className="glowing-text thinking-animation">
+                Hi! {userData.firstName} {userData.lastName}
+              </h4>
+
+              <img
+                src={dashboardImage}
+                alt="User Avatar"
+                className="avatar shake-animation"
+              />
             </div>
           </div>
-          
         </div>
-
       </div>
 
       {/* <div className="linechart-container">
@@ -476,9 +638,8 @@ const Profile = () => {
           </button>
         </div>
       </div> */}
-
     </div>
-  )
-}
+  );
+};
 
 export default Profile;

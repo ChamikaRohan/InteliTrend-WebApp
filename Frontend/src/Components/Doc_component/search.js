@@ -4,7 +4,7 @@ import './search.css';
 export default function search() {
   return (
     <div>
-        <h1 className='topic1'>Find a specialize Doctor in Sri Lanka</h1>
+        <h1 className='topic1 text-4xl	text-center pb-5'>Find a specialize Doctor in Sri Lanka</h1>
 
         <div className="doctor-search-content">
         <input type="text" placeholder="Enter doctor's name" className="doctor-search-input" />

@@ -160,3 +160,90 @@
     90% { transform: translate(-5px, 0); }
     100% { transform: translate(0, 0); }
   }
+
+  /* loginform.css or a separate CSS file */
+
+/* Style for the success message */
+.success_message {
+  background-color: #4CAF50; /* Green background color */
+  color: white; /* White text color */
+  padding: 10px; /* Padding around the message */
+  text-align: center; /* Center-align the text */
+  border-radius: 5px; /* Rounded corners */
+  margin-top: 10px; /* Add some spacing at the top */
+}
+
+/* Style for the welcome screen */
+.welcome-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's above other content */
+}
+
+.welcome-screen p {
+  font-size: 24px;
+  color: white;
+  text-align: center;
+}
+
+.inteliTrend {
+  color: #00706c; /* Change the color to your desired color code */
+  font-weight: bold; /* Add font weight or other styles as desired */
+}
+
+
+.loading svg polyline {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.loading svg polyline#back {
+  fill: none;
+  stroke: #9f6500;
+}
+
+.loading svg polyline#front {
+  fill: none;
+  stroke: #F2AF3E;
+  stroke-dasharray: 48, 144;
+  stroke-dashoffset: 192;
+  animation: dash_682 1.4s linear infinite;
+}
+
+@keyframes dash_682 {
+  72.5% {
+    opacity: 0;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.click {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #464444;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+}
+
+.click:hover {
+  background-color: transparent;
+  color: blue; /* Change this to the hover background color */
+}
+
